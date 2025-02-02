@@ -1,0 +1,46 @@
+openapi: 3.0.3
+info:
+  title: Taskalert v2 API
+  version: 1.0.0
+  description: This documentation provide user with full details about method built
+    on task api v2
+paths:
+  /api/task:
+    get:
+      operationId: 2
+      description: This api method provide an endpoint to list all the task present
+        in the collections
+      parameters:
+      - in: query
+        name: description
+        schema:
+          type: string
+        description: Provide full description of what the task is about
+      - in: query
+        name: group
+        schema:
+          type: string
+        description: Filter task by groups such as school, works
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: Filter by the name of the task
+      tags:
+      - task
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
+  <title>Home page</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+
+  <link rel="stylesheet" href="{% static 'css/app.css'  %}">
+  <style>
+    label.form-group {
+      padding: 3px 0px !important;
+    }
+
+    .form-group {
+      margin-bottom: 8px !important;
+    }
+
+    .modal-body {
+      padding: 8px 16px !important;
+    }
+
+    .modal-content {
+      margin-top: 50px;
+      height: 410px !important;
+    }
+
+    .form-passwod-group {
+      position: relative;
+    }
+
+    i.togglePassword {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      font-size: 19px;
+      cursor: pointer;
+    }
+
+    label.form-group {
+      padding: 3px 0px !important;
+    }
+
+    .form-group {
+      margin-bottom: 8px !important;
+    }
+
+    .modal-body {
+      padding: 8px 16px !important;
+    }
+
+    .modal-content {
+      margin-top: 50px;
+      height: 410px !important;
+    }
+
+    .hide-modal {
+      animation: Slideout 500ms ease-in forwards;
+    }
+
+    .show-modal {
+      animation: Slidein 500ms ease-in forwards;
+    }
+
+    .imp {
+      text-decoration: underline;
+      font-weight: 300;
+    }
+
+    .carousel-item {
+      height: 400px;
+    }
+
+    .carousel-item img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .carousel-item h5,
+    .carousel-item p {
+      color: black;
+      font-weight: bold;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon,
+    .carousel-indicators {
+      filter: invert(100%);
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body style="background-color: beige;height: 100vh;width: 100%;">
+  <div class="wrapper" style="padding-bottom: 20px;">
+    <div class="jumbotron" style="padding-bottom: 30px;">
+      <h1 class="display-4">Weclome to <strong>Taskalert v2</strong></h1>
+      <hr class="my-4">
+      <p>Utilize the navigation bar below to go through our site and of course <em>have fun !</em></p>
+    </div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb" style="position: relative;">
+        <li class="breadcrumb-item active" aria-current="page"><a href="/"><i class="ph-fill ph-house-line"></i>
+            Home</a></li>
+        <li class="breadcrumb-item"><a href="" target="_blank" style="position:absolute;right:10px;"><i
+              class="ph-fill ph-arrow-square-out"></i>API documentation</a></li>
+      </ol>
+    </nav>
+    <section>
+      <div class="skill-section-header" style="">
+        <h3>Project "Taskalert v2" Overview</h3>
+        <div class="title-border"></div>
+      </div>
+      <p class="leading">
+        The "Taskalert" project is a real-time notes reminder application developed using the MEAN stack (MongoDB, NodeJS, Express, Angular) and Angular Material 3. The application utilizes PusherJS for dynamic push notifications, thereby enhancing user engagement and productivity.
+      </p>
+      <p style="margin-bottom: 5px;">Following are some keypoints that has been focused on:</p>
+      <ul style="">
+        <li>Real-time Notes Reminder Application</li>
+        <li>Robust and Scalable Architecture</li>
+        <li>Message Broker Service</li>
+        <li>Collaborative Task editing</li>
+        <li>Task Filtering</li>
+      </ul>
+
+     <p>
+      The "Taskalert" project offers an innovative solution for managing notes reminders, integrating modern technologies and agile development practices. With a scalable architecture and effective interservice communication, the application ensures a smooth and interactive user experience while maintaining security and performance.
+     </p>
+    </section>
+  </div>
+
+  <div id="back-to-top" class="d-flex justify-content-center align-items-center">
+    <i class="ph-bold ph-caret-double-up"></i>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    });
+  </script>
+</body>
+</html>
