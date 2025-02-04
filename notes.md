@@ -47,3 +47,6 @@
 - /api/users/{id} [get, put]
 - /api/users/{id}/tasks [get]
 - /api/users/{id}/task/{taskid} [put]
+
+- requirement to install
+django, djangorest, drf_spectacular, drf_spectacular sidecar, mongoengine, pymongo
