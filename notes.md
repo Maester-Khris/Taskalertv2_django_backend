@@ -11,7 +11,7 @@
         name: str,
         created_at: date_time, default (now)
     }
-    task:{
+    task:{//
         title: str,
         group: str,
         description: text,
@@ -41,12 +41,13 @@
 - /api/tasks/{id}/editor/{userid} [put]
 - /api/tasks/group?name [get]
 - /api/tasks?title=xxx&description=xxx&item=xxx&page=xxx&limit=xxx
+- /api/tasks/search?query=xxx
 
 - /api/user/ [post]
 - /api/users/ [get]
 - /api/users/{id} [get, put]
 - /api/users/{id}/tasks [get]
-- /api/users/{id}/task/{taskid} [put]
+- /api/users/{id}/task/{taskid} [put] (not necessary just use update task endpoint)
 
 - requirement to install
 django, djangorest, drf_spectacular, drf_spectacular sidecar, mongoengine, pymongo

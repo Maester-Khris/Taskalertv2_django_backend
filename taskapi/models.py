@@ -1,17 +1,26 @@
 from django.db import models
-from mongoengine import Document, StringField, IntField
+from mongoengine import  Document, StringField, ListField, DateTimeField, DictField, ReferenceField
+from userapi.models import User
+from datetime import datetime
+
+class Item(Document):
+    name = StringField(required=True)
+    meta = {'collection': 'items'}
+
+    def __str__(self):
+        return self.name
 
 class Task(Document):
-    name = StringField(required=True, max_length=100)
+    title = StringField(required=True, max_length=100)
     group = StringField(required=True, max_length=100)
-    description = StringField(required=True, max_length=255)
+    description = StringField(required=False)  # No max_length for text
+    items = ListField(ReferenceField(Item), default=list)  # List of Item references
+    editors = ListField(ReferenceField(User))  # List of User references
+    created_at = DateTimeField(default=datetime.now)
+    last_modification_time = DateTimeField(default=None)
 
-    meta = {'collection': 'tasks'}  # Specify the collection name
+    meta = {'collection': 'tasks'}
 
-# class Task(models.Model):
-#     name = models.CharField(max_length=70, blank=False, default='')
-#     description = models.CharField(max_length=70, blank=False, default='')
-#     group = models.CharField(max_length=200,blank=False, default='')
-
-#     def __str__(self):
-#         return self.title
+    def __str__(self):
+        return self.title
+    
