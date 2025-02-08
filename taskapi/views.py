@@ -1,11 +1,9 @@
+
 from django.shortcuts import render
 
-from django.http.response import JsonResponse
-
-from rest_framework import status, viewsets, serializers
+from rest_framework.views import APIView
+from rest_framework import status, serializers
 from rest_framework.response import Response
-from rest_framework.parsers import JSONParser 
-from rest_framework.decorators import api_view, action
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
@@ -17,15 +15,22 @@ from userapi.models import User
 from taskmanager import utils
 
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from drf_spectacular.utils import extend_schema
-from .models import Task
-from .serializers import TaskSerializer
+
+class TaskGroupSerializer(serializers.Serializer):
+    groups = serializers.ListField()
 
 
-class TaskView(APIView):
+class TaskListView(APIView):
+    @extend_schema(
+        responses={200: TaskSerializer(many=True)},
+        description="Retrieve a list of tasks."
+    )
+    def get(self, request):
+        tasks = Task.objects.all()
+        print("===========display==========")
+        print(tasks)
+        serializer = TaskSerializer(tasks, many=True)
+        return Response(serializer.data)
 
     @extend_schema(
         request=TaskSerializer,
@@ -38,21 +43,14 @@ class TaskView(APIView):
             task = serializer.save()
             return Response(TaskSerializer(task).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
-    @extend_schema(
-        responses={200: TaskSerializer(many=True)},
-        description="Retrieve a list of tasks."
-    )
-    def get(self, request):
-        tasks = Task.objects.all()
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
-
+class TaskDetailView(APIView):
     @extend_schema(
         responses={200: TaskSerializer, 404: 'Not Found'},
         description="Retrieve a task by ID."
     )
-    def get_task(self, request, id):
+    def get(self, request, id):
         try:
             task = Task.objects.get(id=id)
             serializer = TaskSerializer(task)
@@ -76,11 +74,13 @@ class TaskView(APIView):
         except Task.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+
+class TaskEditorsView(APIView):
     @extend_schema(
         responses={200: UserSerializer(many=True), 404: 'Not Found'},
         description="Retrieve a list of editors for a specific task."
     )
-    def get_editors(self, request, id):
+    def get(self, request, id):
         try:
             task = Task.objects.get(id=id)
             editors = task.editors
@@ -89,12 +89,15 @@ class TaskView(APIView):
         except Task.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+   
+
+class TaskAddEditorsView(APIView):
     @extend_schema(
-        request=UserSerializer,
+        #request=UserSerializer,
         responses={200: TaskSerializer, 400: 'Bad Request', 404: 'Not Found'},
         description="Add or update an editor for a specific task."
     )
-    def put_editor(self, request, id, userid):
+    def put(self, request, id, userid):
         try:
             task = Task.objects.get(id=id)
             user = User.objects.get(id=userid)
@@ -110,53 +113,190 @@ class TaskView(APIView):
         except (Task.DoesNotExist, User.DoesNotExist):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+
+class TaskGroupView(APIView):
     @extend_schema(
+        parameters=[
+            OpenApiParameter('group', str, description='group name', required=True), 
+        ],
         responses={200: TaskSerializer(many=True)},
         description="Retrieve tasks by group name."
     )
-    def get_tasks_by_group(self, request):
-        group_name = request.query_params.get('name')
-        tasks = Task.objects.filter(group=group_name)
+    def get(self, request):
+        group_name = request.query_params.get('group')
+        tasks = Task.objects(group__in=[group_name])
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
+
+class TaskFilterView(APIView):
     @extend_schema(
         responses={200: TaskSerializer(many=True)},
-        description="Retrieve tasks with optional filters."
+        description="Retrieve tasks with title filter and result paginated."
     )
-    def get_filtered_tasks(self, request):
+    def get(self, request):
         title = request.query_params.get('title', None)
-        description = request.query_params.get('description', None)
-        item = request.query_params.get('item', None)
         page = request.query_params.get('page', 1)
         limit = request.query_params.get('limit', 10)
 
-        tasks = Task.objects.all()
-
-        if title:
-            tasks = tasks.filter(title__icontains=title)
-        if description:
-            tasks = tasks.filter(description__icontains=description)
-        if item:
-            tasks = tasks.filter(items__name__icontains=item)
-
+        tasks = Task.objects.filter(title__icontains=title)
+       
         # Pagination logic (basic example)
         start = (int(page) - 1) * int(limit)
         end = start + int(limit)
         tasks = tasks[start:end]
 
+        #page_nb = 2 
+        # items_per_page = 10 
+        # offset = (page_nb - 1) * items_per_page
+        # list = Books.objects.skip( offset ).limit( items_per_page )
+
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
+class TaskSearchView(APIView):
     @extend_schema(
         responses={200: TaskSerializer(many=True)},
         description="Search tasks by a query string."
     )
-    def search_tasks(self, request):
+    def get(self, request):
         query = request.query_params.get('query', '')
         tasks = Task.objects.filter(title__icontains=query) | Task.objects.filter(description__icontains=query)
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
+
+
+# class TaskView(APIView):
+#     @extend_schema(
+#         request=TaskSerializer,
+#         responses={201: TaskSerializer, 400: 'Bad Request'},
+#         description="Create a new task."
+#     )
+#     def post(self, request):
+#         serializer = TaskSerializer(data=request.data)
+#         if serializer.is_valid():
+#             task = serializer.save()
+#             return Response(TaskSerializer(task).data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#     @extend_schema(
+#         responses={200: TaskSerializer(many=True)},
+#         description="Retrieve a list of tasks."
+#     )
+#     def get(self, request):
+#         tasks = Task.objects.all()
+#         serializer = TaskSerializer(tasks, many=True)
+#         return Response(serializer.data)
+
+#     @extend_schema(
+#         responses={200: TaskSerializer, 404: 'Not Found'},
+#         description="Retrieve a task by ID."
+#     )
+#     def get_task(self, request, id):
+#         try:
+#             task = Task.objects.get(id=id)
+#             serializer = TaskSerializer(task)
+#             return Response(serializer.data)
+#         except Task.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     @extend_schema(
+#         request=TaskSerializer,
+#         responses={200: TaskSerializer, 400: 'Bad Request', 404: 'Not Found'},
+#         description="Update a task by ID."
+#     )
+#     def put(self, request, id):
+#         try:
+#             task = Task.objects.get(id=id)
+#             serializer = TaskSerializer(task, data=request.data)
+#             if serializer.is_valid():
+#                 updated_task = serializer.save()
+#                 return Response(TaskSerializer(updated_task).data)
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         except Task.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     @extend_schema(
+#         responses={200: UserSerializer(many=True), 404: 'Not Found'},
+#         description="Retrieve a list of editors for a specific task."
+#     )
+#     def get_editors(self, request, id):
+#         try:
+#             task = Task.objects.get(id=id)
+#             editors = task.editors
+#             serializer = UserSerializer(editors, many=True)
+#             return Response(serializer.data)
+#         except Task.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     @extend_schema(
+#         request=UserSerializer,
+#         responses={200: TaskSerializer, 400: 'Bad Request', 404: 'Not Found'},
+#         description="Add or update an editor for a specific task."
+#     )
+#     def put_editor(self, request, id, userid):
+#         try:
+#             task = Task.objects.get(id=id)
+#             user = User.objects.get(id=userid)
+
+#             if user not in task.editors:
+#                 task.editors.append(user)
+#             else:
+#                 # If user is already an editor, update can be handled here if needed
+#                 pass
+            
+#             task.save()
+#             return Response(TaskSerializer(task).data)
+#         except (Task.DoesNotExist, User.DoesNotExist):
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+
+#     @extend_schema(
+#         responses={200: TaskSerializer(many=True)},
+#         description="Retrieve tasks by group name."
+#     )
+#     def get_tasks_by_group(self, request):
+#         group_name = request.query_params.get('name')
+#         tasks = Task.objects.filter(group=group_name)
+#         serializer = TaskSerializer(tasks, many=True)
+#         return Response(serializer.data)
+
+#     @extend_schema(
+#         responses={200: TaskSerializer(many=True)},
+#         description="Retrieve tasks with optional filters."
+#     )
+#     def get_filtered_tasks(self, request):
+#         title = request.query_params.get('title', None)
+#         description = request.query_params.get('description', None)
+#         item = request.query_params.get('item', None)
+#         page = request.query_params.get('page', 1)
+#         limit = request.query_params.get('limit', 10)
+
+#         tasks = Task.objects.all()
+
+#         if title:
+#             tasks = tasks.filter(title__icontains=title)
+#         if description:
+#             tasks = tasks.filter(description__icontains=description)
+#         if item:
+#             tasks = tasks.filter(items__name__icontains=item)
+
+#         # Pagination logic (basic example)
+#         start = (int(page) - 1) * int(limit)
+#         end = start + int(limit)
+#         tasks = tasks[start:end]
+
+#         serializer = TaskSerializer(tasks, many=True)
+#         return Response(serializer.data)
+
+#     @extend_schema(
+#         responses={200: TaskSerializer(many=True)},
+#         description="Search tasks by a query string."
+#     )
+#     def search_tasks(self, request):
+#         query = request.query_params.get('query', '')
+#         tasks = Task.objects.filter(title__icontains=query) | Task.objects.filter(description__icontains=query)
+#         serializer = TaskSerializer(tasks, many=True)
+#         return Response(serializer.data)
    
 
 

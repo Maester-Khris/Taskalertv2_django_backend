@@ -1,11 +1,14 @@
 from django.core.management.base import BaseCommand
-from taskmanager.models import Task, Item
-from usermanager.models import User 
+from taskapi.models import Task
+from userapi.models import User 
 from datetime import datetime
 
 
 class Command(BaseCommand):
     help = 'Taskalert database seeding with initial data'
+    print("=========== Clean existing records =======")
+    Task.objects.delete()
+    User.objects.delete()
 
     def handle(self, *args, **kwargs):
         # Create users
@@ -15,35 +18,29 @@ class Command(BaseCommand):
             User(name='Charlie').save()
         ]
 
-        # Create items
-        items = [
-            Item(name='Item 1').save(),
-            Item(name='Item 2').save(),
-            Item(name='Item 3').save(),
-            Item(name='Item 4').save()
-        ]
+        
 
         # Create tasks
         tasks = [
             Task(
                 title='Task 1',
-                group='Group A',
+                group=['Group A'],
                 description='This is the first task.',
-                items=[items[0], items[1]],
+                items=["Holla", "Senior fall"],
                 editors=[users[0], users[1]]
             ).save(),
             Task(
                 title='Task 2',
-                group='Group B',
+                group=['Group B'],
                 description='This is the second task.',
-                items=[items[2], items[3]],
+                items=[],
                 editors=[users[1], users[2]]
             ).save(),
             Task(
                 title='Task 3',
-                group='Group A',
+                group=['Group A'],
                 description='This is the third task.',
-                items=[],
+                items=["Dev test", "Splunk test", "Load test"],
                 editors=[users[0], users[2]]
             ).save()
         ]

@@ -51,3 +51,24 @@
 
 - requirement to install
 django, djangorest, drf_spectacular, drf_spectacular sidecar, mongoengine, pymongo
+
+67a6868e09983788efa6a53c
+{
+  "title": "continue !",
+  "group": "strong",
+  "description": "keep improving and working",
+  "items": [
+    "finish with mongo api",
+    "engage with view crud backed by api",
+    "start rabbitmq websocket connection"
+  ],
+  "editors": [
+    {
+      "name": "niki"
+    },
+    {
+      "name": "renzel"
+    }
+  ]
+}
+"last_modification_time": "2025-02-07T22:06:08.567Z"
