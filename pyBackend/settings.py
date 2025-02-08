@@ -94,7 +94,10 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Taskalert v2 API',
-    'DESCRIPTION': 'This documentation provide user with full details about method built on task api v2',
+    'DESCRIPTION': """This documentation provide user with full details about method built on Taskalert api v2.
+            Important Notes: 
+            our api is actually unavailable due to the limitation of our web providing causing the error when connecting to Remote Mongo Atlas Cluster, We are currently working on this. Thank you 🙏
+            """,
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
