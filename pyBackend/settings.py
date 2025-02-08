@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'home',
-    'taskmanager',
+    'userapi',
     'taskapi',
     'drf_spectacular',
     'drf_spectacular_sidecar',
@@ -113,6 +113,10 @@ SPECTACULAR_SETTINGS = {
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+MONGO_CONNECTION_URI = "mongodb+srv://nk_dev:JlreVIdITFqTbNmK@cluster0.sgdzstx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_DATABASE_NAME = "taskalertdb"
+MONGO_COLLECTION_NAME = "tasks"
 
 
 # Password validation

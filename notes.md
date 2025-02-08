@@ -72,3 +72,18 @@ django, djangorest, drf_spectacular, drf_spectacular sidecar, mongoengine, pymon
   ]
 }
 "last_modification_time": "2025-02-07T22:06:08.567Z"
+
+[
+  {
+    $search: {
+      index: "tasks-ft-search",
+      text: {
+        query: "<query>",
+        path: {
+          wildcard: "*"
+        }
+      }
+    }
+  }
+]
+

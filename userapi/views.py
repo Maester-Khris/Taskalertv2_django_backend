@@ -31,7 +31,7 @@ class UserListView(APIView):
 class UserDetailView(APIView):
     @extend_schema(
         responses={200: UserSerializer, 404: 'Not Found'},
-        description="Retrieve a user by ID."
+        description="Retrieve a user By Object ID."
     )
     def get(self, request, id):
         try:
@@ -44,7 +44,7 @@ class UserDetailView(APIView):
     @extend_schema(
         request=UserSerializer,
         responses={200: UserSerializer, 400: 'Bad Request', 404: 'Not Found'},
-        description="Update a user by ID."
+        description="Update a user By Object ID."
     )
     def put(self, request, id):
         try:
@@ -83,7 +83,7 @@ class UserDetailView(APIView):
 
 #     @extend_schema(
 #         responses={200: UserSerializer, 404: 'Not Found'},
-#         description="Retrieve a user by ID."
+#         description="Retrieve a user By Object ID."
 #     )
 #     def get_user(self, request, id):
 #         try:
@@ -96,7 +96,7 @@ class UserDetailView(APIView):
 #     @extend_schema(
 #         request=UserSerializer,
 #         responses={200: UserSerializer, 400: 'Bad Request', 404: 'Not Found'},
-#         description="Update a user by ID."
+#         description="Update a user By Object ID."
 #     )
 #     def put(self, request, id):
 #         try:

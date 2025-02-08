@@ -3,7 +3,7 @@ from .models import User
 from datetime import datetime
 
 class UserSerializer(serializers.Serializer):
-    id = serializers.CharField(read_only=True)  # MongoDB uses ObjectId
+    id = serializers.CharField(read_only=True, required=False)  # MongoDB uses ObjectId
     name = serializers.CharField(max_length=100)
     created_at = serializers.DateTimeField(default=datetime.now, read_only=True)
 

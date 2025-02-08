@@ -3,10 +3,6 @@ from mongoengine import  Document, EmbeddedDocument, StringField, ListField, Dat
 from userapi.models import User
 from datetime import datetime
 
-# class Item(EmbeddedDocument):
-#     name = StringField(required=True)
-#     def __str__(self):
-#         return self.name
 
 class Task(Document):
     title = StringField(required=True, max_length=100)

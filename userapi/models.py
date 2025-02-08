@@ -9,4 +9,4 @@ class User(Document):
     meta = {'collection': 'users'}
 
     def __str__(self):
-        return self.title
+        return self.name
